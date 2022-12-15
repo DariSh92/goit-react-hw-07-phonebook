@@ -2,8 +2,9 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 import { FormWrapp, Input, Error, Label, SubmitButton } from 'components/ContactForm/ContactForm.styled';
 import { useSelector, useDispatch } from 'react-redux';
-import { addContact, getContactsValue } from 'redux/phonebookSlice';
-import { nanoid } from 'nanoid';
+import { addContact } from 'redux/operations';
+import { getContacts } from 'redux/selectors';
+
 
 const schema = yup.object().shape({
     name: yup.string().matches(/^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/, "Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan").required(),
@@ -19,7 +20,7 @@ const initialValues = {
 
 export const ContactForm = () => {
     const dispatch = useDispatch();
-    const { contacts } = useSelector(getContactsValue);
+    const contacts  = useSelector(getContacts);
 
     const handleSubmit = (values, { resetForm }) => {
         resetForm();
@@ -35,11 +36,11 @@ export const ContactForm = () => {
 
     dublicateContact
         ? alert(`${contact.name} is already in contacts`)
-        : dispatch(addContact({ ...values, id: nanoid() }));
+        : dispatch(addContact(values));
     };
     
-    const findDublicateContact = (contact, contactsList) => {
-        return contactsList.find(
+    const findDublicateContact = (contact, contacts) => {
+        return contacts.find(
             item => item.name.toLowerCase() === contact.name.toLowerCase()
         );
     };

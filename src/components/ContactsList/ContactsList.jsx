@@ -1,10 +1,15 @@
 import { ContactListMarkup, ContactListItem, ContactListHeader, ContactListText, ContactListButton } from 'components/ContactsList/ContactsList.styled';
 import { useSelector, useDispatch } from 'react-redux';
-import { getContactsValue, removeContact } from 'redux/phonebookSlice';
+import { deleteContact } from 'redux/operations';
+import { getContacts, getFilter } from 'redux/selectors';
+
+
 
 export const ContactList = () => {
   const dispatch = useDispatch();
-  const { contacts, filter } = useSelector(getContactsValue);
+  // const { contacts, filter } = useSelector(getContacts, getFilter);
+  const contacts = useSelector(getContacts);
+  const filter = useSelector(getFilter);
 
   const getRequiredCard = () => {
     const normalizedFilter = filter.toLowerCase();
@@ -15,7 +20,7 @@ export const ContactList = () => {
   };
 
   const deleteCard = contactId => {
-    dispatch(removeContact(contactId));
+    dispatch(deleteContact(contactId));
   };
   const neeedCard = getRequiredCard();
     return (

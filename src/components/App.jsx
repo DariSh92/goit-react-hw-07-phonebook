@@ -2,15 +2,24 @@ import { ContactForm } from 'components/ContactForm/ContactForm';
 import { Container } from 'components/App.styled';
 import { Filter } from 'components/FilterField/Filter';
 import { ContactList } from 'components/ContactsList/ContactsList';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { getError, getIsLoading } from 'redux/selectors';
+import { fetchContacts } from 'redux/operations';
+import { Loader } from './Loader/Loader';
 
 
 export const App = () => {
- 
   
-  // useEffect(() => {
-  //   // const contacts = localStorage.getItem('contacts');
-  //   window.localStorage.setItem('contacts', JSON.stringify(contacts));
-  // }, [contacts]);
+  const dispatch = useDispatch();
+  const isLoading = useSelector(getIsLoading);
+  const error = useSelector(getError);
+
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
+
 
   
   return (
@@ -18,10 +27,10 @@ export const App = () => {
     <Container>
       <h1>Phonebook</h1>
       <ContactForm />
-      
       <h2>Contacts</h2>
       <Filter/>
-      <ContactList/>
+      <ContactList />
+      {isLoading && !error && <Loader />}
     </Container>
   );
 };
